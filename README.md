@@ -57,7 +57,7 @@ This backend requires the following third party components:
 - [Guideline Support Library (GSL)](https://github.com/microsoft/GSL): v3.1.0<br/>This is a header only library, so, it does not need to be built.
 
 #### Configuring Pre-Installed API Bridge <a name="configuring-pre-installed-api-bridge"></a>
-The <b>API Bridge</b> is the component in HEBench that allows communication between Test harness and backends.
+The <b>API Bridge</b> is the component in HEBench that allows communication between Test Harness and backends.
 
 If API Bridge has been pre-built, users can point the build system to the pre-installed version of API Bridge using the following CMake config variables:
 
@@ -92,13 +92,13 @@ If <b>not</b> using pre-installed frontend, `make install` will include the fron
 
 ### Running the Benchmark <a name="running-the-benchmark"></a>
 
-Once the backend has been built and installed successfully (assuming it has been installed to `$INSTALL_LOCATION`), the frontend <b>Test harness</b> can run the benchmark as follows:
+Once the backend has been built and installed successfully (assuming it has been installed to `$INSTALL_LOCATION`), the frontend <b>Test Harness</b> can run the benchmark as follows:
 
 ```bash
 test_harness --backend_lib_path $INSTALL_LOCATION/lib/libhebench_cleartext_backend.so --report_root_path $REPORT_OUTPUT_PATH
 ```
 
-The Test harness will save the reports and summary of the run to the path specified in `$REPORT_OUTPUT_PATH`.
+The Test Harness will save the reports and summary of the run to the path specified in `$REPORT_OUTPUT_PATH`.
 
 ### Contributing <a name="contributing"></a>
 

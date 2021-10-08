@@ -46,18 +46,18 @@ The build system will search for pre-installed third-party components in each of
 2. `-D{COMPONENT_NAME}_INSTALL_DIR`
 3. `/usr/local`
 
-Note that if pre-installed versions are incompatible with the current version of the front-end, the build will fail.
+Note that if pre-installed versions are incompatible with the current version of the frontend, the build will fail.
 
 See the following sections for the specific configuration variable names for each required third-party component.
 
 #### Third-Party Components <a name="third-party-components"></a>
-This back-end requires the following third party components:
+This backend requires the following third party components:
 
 - [HEBench API Bridge](https://github.com/hebench/api-bridge): Frontend component containing the API Bridge (both C headers and C++ wrapper).
 - [Guideline Support Library (GSL)](https://github.com/microsoft/GSL): v3.1.0<br/>This is a header only library, so, it does not need to be built.
 
 #### Configuring Pre-Installed API Bridge <a name="configuring-pre-installed-api-bridge"></a>
-The <b>API Bridge</b> is the component in HEBench that allows communication between Test harness and backends.
+The <b>API Bridge</b> is the component in HEBench that allows communication between Test Harness and backends.
 
 If API Bridge has been pre-built, users can point the build system to the pre-installed version of API Bridge using the following CMake config variables:
 
@@ -86,19 +86,19 @@ make -j
 make install # install built components
 ```
 
-The install step will copy the target back-end library `libhebench_cleartext_backend.so` to `$INSTALL_LOCATION/lib`
+The install step will copy the target backend library `libhebench_cleartext_backend.so` to `$INSTALL_LOCATION/lib`
 
-If <b>not</b> using pre-installed front-end, `make install` will include the front-end components as part of the installation.
+If <b>not</b> using pre-installed frontend, `make install` will include the frontend components as part of the installation.
 
 ### Running the Benchmark <a name="running-the-benchmark"></a>
 
-Once the back-end has been built and installed successfully (assuming it has been installed to `$INSTALL_LOCATION`), the front-end <b>Test harness</b> can run the benchmark as follows:
+Once the backend has been built and installed successfully (assuming it has been installed to `$INSTALL_LOCATION`), the frontend <b>Test Harness</b> can run the benchmark as follows:
 
 ```bash
 test_harness --backend_lib_path $INSTALL_LOCATION/lib/libhebench_cleartext_backend.so --report_root_path $REPORT_OUTPUT_PATH
 ```
 
-The Test harness will save the reports and summary of the run to the path specified in `$REPORT_OUTPUT_PATH`.
+The Test Harness will save the reports and summary of the run to the path specified in `$REPORT_OUTPUT_PATH`.
 
 ### Contributing <a name="contributing"></a>
 

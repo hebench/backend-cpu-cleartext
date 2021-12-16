@@ -84,9 +84,9 @@ inline void DotProd_Benchmark<T>::decode(hebench::APIBridge::Handle encoded_data
     //  encoded_data <=> PackedParams->
 
     const std::vector<std::shared_ptr<VectorParamPack<T>>> &internal_packed_params =
-        *this->getEngine().retrieveFromHandle<std::shared_ptr<std::vector<std::shared_ptr<VectorParamPack<T>>>>>(encoded_data);
+        *this->getEngine().template retrieveFromHandle<std::shared_ptr<std::vector<std::shared_ptr<VectorParamPack<T>>>>>(encoded_data);
 
-    std::uint64_t min_count = std::min(p_native->pack_count, internal_packed_params.size());
+    std::uint64_t min_count = std::min(p_native->pack_count, (uint64_t)internal_packed_params.size());
     for (std::uint64_t i = 0; i < min_count; ++i)
     {
         const VectorParamPack<T> &param = *internal_packed_params[i];
@@ -123,7 +123,7 @@ inline hebench::APIBridge::Handle DotProd_Benchmark<T>::load(const hebench::APIB
     {
         // retrieve our internal format of a PackedParams from the next handle to local data
         const std::vector<std::shared_ptr<VectorParamPack<T>>> &local_packed_params =
-            *this->getEngine().retrieveFromHandle<std::shared_ptr<std::vector<std::shared_ptr<VectorParamPack<T>>>>>(p_local_data[i]);
+            *this->getEngine().template retrieveFromHandle<std::shared_ptr<std::vector<std::shared_ptr<VectorParamPack<T>>>>>(p_local_data[i]);
 
         // transfer from local host to remote:
         // we do not have to transfer data to an actual remote device/server/etc,
@@ -145,10 +145,10 @@ inline void DotProd_Benchmark<T>::store(hebench::APIBridge::Handle remote_data,
 
     // retrieve internal format from handle
     const std::vector<std::vector<std::shared_ptr<VectorParamPack<T>>>> &remote_packed_params_collection =
-        *this->getEngine().retrieveFromHandle<std::shared_ptr<std::vector<std::vector<std::shared_ptr<VectorParamPack<T>>>>>>(remote_data);
+        *this->getEngine().template retrieveFromHandle<std::shared_ptr<std::vector<std::vector<std::shared_ptr<VectorParamPack<T>>>>>>(remote_data);
 
     // unpack every PackedData and make a copy since host == remote for this backend
-    std::uint64_t min_size = std::min(remote_packed_params_collection.size(), count);
+    std::uint64_t min_size = std::min((uint64_t)remote_packed_params_collection.size(), count);
     for (std::uint64_t i = 0; i < min_size; ++i)
     {
         auto p_local_packed_params =
@@ -177,7 +177,7 @@ inline hebench::APIBridge::Handle DotProd_Benchmark<T>::operate(hebench::APIBrid
                                          HEBENCH_ECODE_INVALID_ARGS);
 
     const std::vector<std::vector<std::shared_ptr<VectorParamPack<T>>>> &internal_loaded_params =
-        *this->getEngine().retrieveFromHandle<std::shared_ptr<std::vector<std::vector<std::shared_ptr<VectorParamPack<T>>>>>>(h_remote_packed);
+        *this->getEngine().template retrieveFromHandle<std::shared_ptr<std::vector<std::vector<std::shared_ptr<VectorParamPack<T>>>>>>(h_remote_packed);
 
     if (internal_loaded_params.size() != 1)
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Invalid handle format. Expected 1 parameter pack loaded in handle."),

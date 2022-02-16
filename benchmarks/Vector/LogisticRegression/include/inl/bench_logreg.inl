@@ -35,7 +35,7 @@ inline LogReg_Benchmark<T>::LogReg_Benchmark(hebench::cpp::BaseEngine &engine,
     case hebench::APIBridge::Workload::LogisticRegression_PolyD3:
     case hebench::APIBridge::Workload::LogisticRegression_PolyD5:
     case hebench::APIBridge::Workload::LogisticRegression_PolyD7:
-        m_vector_size = w_params.n;
+        m_vector_size = w_params.n();
         break;
     default:
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Unsupported benchmark descriptor 'bench_desc'"),

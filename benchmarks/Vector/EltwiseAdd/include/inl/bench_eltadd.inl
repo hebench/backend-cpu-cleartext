@@ -31,7 +31,7 @@ inline EltAdd_Benchmark<T>::EltAdd_Benchmark(hebench::cpp::BaseEngine &engine,
     switch (bench_desc.workload)
     {
     case hebench::APIBridge::Workload::EltwiseAdd:
-        m_vector_size = w_params.n;
+        m_vector_size = w_params.n();
         break;
 
     default:

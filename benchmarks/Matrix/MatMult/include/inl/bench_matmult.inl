@@ -31,10 +31,10 @@ inline MatMult_Benchmark<T>::MatMult_Benchmark(hebench::cpp::BaseEngine &engine,
     switch (bench_desc.workload)
     {
     case hebench::APIBridge::Workload::MatrixMultiply:
-        m_rows[0] = w_params.rows_M0;
-        m_cols[0] = w_params.cols_M0;
-        m_rows[1] = w_params.cols_M0;
-        m_cols[1] = w_params.cols_M1;
+        m_rows[0] = w_params.rows_M0();
+        m_cols[0] = w_params.cols_M0();
+        m_rows[1] = w_params.cols_M0();
+        m_cols[1] = w_params.cols_M1();
         break;
     default:
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Unsupported benchmark descriptor 'bench_desc'"),

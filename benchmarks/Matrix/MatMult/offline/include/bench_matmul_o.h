@@ -68,9 +68,9 @@ inline void MatMult_O_Description<T>::init()
     m_descriptor.other    = 0;
 
     hebench::cpp::WorkloadParams::MatrixMultiply default_workload_params;
-    default_workload_params.rows_M0 = 149;
-    default_workload_params.cols_M0 = 67;
-    default_workload_params.cols_M1 = 107;
+    default_workload_params.rows_M0() = 149;
+    default_workload_params.cols_M0() = 67;
+    default_workload_params.cols_M1() = 107;
     this->addDefaultParameters(default_workload_params);
 }
 

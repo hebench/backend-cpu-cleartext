@@ -56,7 +56,7 @@ inline void LogReg_O_Description<T>::init(const hebench::APIBridge::Workload wor
     m_descriptor.other    = 0;
 
     hebench::cpp::WorkloadParams::LogisticRegression default_workload_params;
-    default_workload_params.n = 999;
+    default_workload_params.n() = 999;
     this->addDefaultParameters(default_workload_params);
 }
 

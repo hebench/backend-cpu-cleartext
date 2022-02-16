@@ -30,7 +30,7 @@ inline DotProd_Benchmark<T>::DotProd_Benchmark(hebench::cpp::BaseEngine &engine,
     switch (bench_desc.workload)
     {
     case hebench::APIBridge::Workload::DotProduct:
-        m_vector_size = w_params.n;
+        m_vector_size = w_params.n();
         break;
 
     default:

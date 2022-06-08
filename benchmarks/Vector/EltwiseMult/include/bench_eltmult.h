@@ -23,8 +23,8 @@ public:
                       const hebench::APIBridge::WorkloadParams &bench_params);
     ~EltMult_Benchmark() override;
 
-    hebench::APIBridge::Handle encode(const hebench::APIBridge::PackedData *p_parameters) override;
-    void decode(hebench::APIBridge::Handle encoded_data, hebench::APIBridge::PackedData *p_native) override;
+    hebench::APIBridge::Handle encode(const hebench::APIBridge::DataPackCollection *p_parameters) override;
+    void decode(hebench::APIBridge::Handle encoded_data, hebench::APIBridge::DataPackCollection *p_native) override;
 
     hebench::APIBridge::Handle load(const hebench::APIBridge::Handle *p_local_data, std::uint64_t count) override;
     void store(hebench::APIBridge::Handle remote_data,

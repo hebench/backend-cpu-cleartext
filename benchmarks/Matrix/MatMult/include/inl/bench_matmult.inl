@@ -49,7 +49,7 @@ inline MatMult_Benchmark<T>::~MatMult_Benchmark()
 }
 
 template <class T>
-inline hebench::APIBridge::Handle MatMult_Benchmark<T>::encode(const hebench::APIBridge::PackedData *p_parameters)
+inline hebench::APIBridge::Handle MatMult_Benchmark<T>::encode(const hebench::APIBridge::DataPackCollection *p_parameters)
 {
     if (p_parameters->pack_count > 0 && !p_parameters->p_data_packs)
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Invalid null 'p_parameters'"),
@@ -79,7 +79,7 @@ inline hebench::APIBridge::Handle MatMult_Benchmark<T>::encode(const hebench::AP
 
 template <class T>
 inline void MatMult_Benchmark<T>::decode(hebench::APIBridge::Handle encoded_data,
-                                         hebench::APIBridge::PackedData *p_native)
+                                         hebench::APIBridge::DataPackCollection *p_native)
 {
     // PackedParams <=> std::vector<std::shared_ptr<MatrixParamPack>>
     // DataPack <=> MatrixParamPack
@@ -151,7 +151,7 @@ inline void MatMult_Benchmark<T>::store(hebench::APIBridge::Handle remote_data,
     const std::vector<std::vector<std::shared_ptr<MatrixParamPack<T>>>> &remote_packed_params_collection =
         *this->getEngine().retrieveFromHandle<std::shared_ptr<std::vector<std::vector<std::shared_ptr<MatrixParamPack<T>>>>>>(remote_data);
 
-    // unpack every PackedData and make a copy since host == remote for this backend
+    // unpack every DataPackCollection and make a copy since host == remote for this backend
     std::uint64_t min_size = std::min(remote_packed_params_collection.size(), count);
     for (std::uint64_t i = 0; i < min_size; ++i)
     {

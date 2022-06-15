@@ -60,7 +60,7 @@ inline void EltMult_L_Description<T>::init()
     m_descriptor.workload                                   = hebench::APIBridge::Workload::EltwiseMultiply;
     m_descriptor.category                                   = hebench::APIBridge::Category::Latency;
     m_descriptor.cat_params.latency.warmup_iterations_count = 1; // warm up for 1 iteration
-    m_descriptor.cat_params.latency.min_test_time_ms        = 0; // default
+    m_descriptor.cat_params.min_test_time_ms                = 0; // default
     m_descriptor.cipher_param_mask                          = HEBENCH_HE_PARAM_FLAGS_ALL_PLAIN; // all plain text params for this example
     //
     m_descriptor.scheme   = HEBENCH_HE_SCHEME_PLAIN;

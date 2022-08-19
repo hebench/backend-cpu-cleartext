@@ -20,6 +20,8 @@
 #include "benchmarks/Vector/EltwiseMult/offline/include/bench_eltmult_o.h"
 #include "benchmarks/Vector/LogisticRegression/latency/include/bench_logreg_l.h"
 #include "benchmarks/Vector/LogisticRegression/offline/include/bench_logreg_o.h"
+#include "benchmarks/Vector/SimpleSetIntersection/latency/include/bench_simplesetint_l.h"
+#include "benchmarks/Vector/SimpleSetIntersection/offline/include/bench_simplesetint_o.h"
 
 //-----------------
 // Engine creation
@@ -147,4 +149,16 @@ void ClearTextEngine::init()
     addBenchmarkDescription(std::make_shared<LogReg_L_Description<double>>(hebench::APIBridge::Workload::LogisticRegression_PolyD7));
     addBenchmarkDescription(std::make_shared<LogReg_O_Description<float>>(hebench::APIBridge::Workload::LogisticRegression_PolyD7));
     addBenchmarkDescription(std::make_shared<LogReg_O_Description<double>>(hebench::APIBridge::Workload::LogisticRegression_PolyD7));
+
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<std::int32_t>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<std::int64_t>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<float>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<double>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<std::string>>());
+
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<std::int32_t>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<std::int64_t>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<float>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<double>>());
+    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<std::string>>());
 }

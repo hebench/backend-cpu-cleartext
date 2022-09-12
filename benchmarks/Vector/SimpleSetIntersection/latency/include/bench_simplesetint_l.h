@@ -72,8 +72,9 @@ inline void SimpleSetIntersection_L_Description<T>::init()
     m_descriptor.security = HEBENCH_HE_SECURITY_NONE;
     m_descriptor.other    = 0;
 
-    hebench::cpp::WorkloadParams::LogisticRegression default_workload_params;
-    default_workload_params.n() = 999;
+    hebench::cpp::WorkloadParams::SimpleSetIntersection default_workload_params;
+    default_workload_params.n() = 99;
+    default_workload_params.m() = 13;
     this->addDefaultParameters(default_workload_params);
 }
 

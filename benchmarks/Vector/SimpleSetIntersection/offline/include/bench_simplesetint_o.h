@@ -65,15 +65,15 @@ inline void SimpleSetIntersection_O_Description<T>::init()
     m_descriptor.category                         = hebench::APIBridge::Category::Offline;
     m_descriptor.cat_params.offline.data_count[0] = 1;
     m_descriptor.cat_params.offline.data_count[1] = 1;
-    m_descriptor.cat_params.offline.data_count[2] = 29;
     m_descriptor.cipher_param_mask                = HEBENCH_HE_PARAM_FLAGS_ALL_PLAIN; // all plain text params for this example
     //
     m_descriptor.scheme   = HEBENCH_HE_SCHEME_PLAIN;
     m_descriptor.security = HEBENCH_HE_SECURITY_NONE;
     m_descriptor.other    = 0;
 
-    hebench::cpp::WorkloadParams::LogisticRegression default_workload_params;
-    default_workload_params.n() = 999;
+    hebench::cpp::WorkloadParams::SimpleSetIntersection default_workload_params;
+    default_workload_params.n() = 99;
+    default_workload_params.m() = 13;
     this->addDefaultParameters(default_workload_params);
 }
 

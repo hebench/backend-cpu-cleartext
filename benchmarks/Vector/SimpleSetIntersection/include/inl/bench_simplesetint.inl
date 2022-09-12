@@ -29,8 +29,7 @@ inline SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection_Benchmark(heben
     {
     case hebench::APIBridge::Workload::SimpleSetIntersection:
         m_set_size_x = w_params.n();
-        // TODO: Add new workload params to cover sets
-        m_set_size_y = w_params.n();
+        m_set_size_y = w_params.m();
         break;
     default:
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Unsupported benchmark descriptor 'bench_desc'"),
@@ -198,7 +197,8 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(he
     std::uint64_t result_sample_count = 1;
     for (std::size_t i = 0; i < params.size(); ++i)
         result_sample_count *= params[i]->getSamplesCount();
-    std::vector<std::uint64_t> result_sample_sizes(result_sample_count, 1);
+    // if X in Y or Y in X, there's one contained, so the maximun size is the minimum between the two sets.
+    std::vector<std::uint64_t> result_sample_sizes(result_sample_count, std::min(m_set_size_x, m_set_size_y));
 
     // allocate buffers for results
     std::shared_ptr<VectorParamPack<T>> p_result = std::make_shared<VectorParamPack<T>>(result_sample_count,
@@ -207,7 +207,7 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(he
                                                                                         1);
 
     std::array<std::uint64_t, 2> param_i;
-    std::array<gsl::span<const T>, param_i.size()> data;
+    std::array<gsl::span<T>, param_i.size()> data;
     std::uint64_t next_result = 0;
 
     for (param_i[0] = p_param_indexers[0].value_index;
@@ -241,10 +241,10 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(he
 
 template <class T>
 void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &result,
-                                 const gsl::span<const T> &X, 
-                                 const gsl::span<const T> &Y, 
-                                 std::size_t n,
-                                 std::size_t m)
+                                                               const gsl::span<const T> &X, 
+                                                               const gsl::span<const T> &Y, 
+                                                               std::size_t n,
+                                                               std::size_t m)
 {
     if (X.size() != n)
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector in parameter 0."),
@@ -252,11 +252,13 @@ void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &res
     if (Y.size() != m)
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector in parameter 1."),
                                          HEBENCH_ECODE_INVALID_ARGS);
-    if (result.size() != 1)
+    if (result.size() != std::min(n, m))
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector for result."),
                                          HEBENCH_ECODE_INVALID_ARGS);
+
     std::vector<T> sorted_x {X.begin(), X.begin() + n};
     std::vector<T> sorted_y {Y.begin(), Y.begin() + m};
+
     std::sort(sorted_x.begin(), sorted_x.begin() + n);
     std::sort(sorted_y.begin(), sorted_y.begin() + m);
     std::set_intersection(sorted_x.begin(), sorted_x.begin() + n , sorted_y.begin(), sorted_y.begin() + m, result.begin());

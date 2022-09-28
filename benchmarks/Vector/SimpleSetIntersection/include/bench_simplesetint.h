@@ -32,12 +32,16 @@ public:
 protected:
     std::uint64_t m_set_size_x;
     std::uint64_t m_set_size_y;
+    std::uint64_t m_item_size_k;
     hebench::APIBridge::Workload m_workload;
 
 private:
+    static void mySetIntersection(const T *dataset_X, const T *dataset_Y, gsl::span<T> &result,
+                                  std::size_t n, std::size_t m, std::size_t k);
+    static bool isMemberOf(const T *dataset, const T *value, std::size_t n, std::size_t k);
     static void SimpleSetIntersection(gsl::span<T> &result,
                                       const gsl::span<const T> &X, const gsl::span<const T> &Y,
-                                      std::size_t n, std::size_t m);
+                                      std::size_t n, std::size_t m, std::size_t k);
 };
 
 #include "inl/bench_simplesetint.inl"

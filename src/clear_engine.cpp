@@ -154,11 +154,9 @@ void ClearTextEngine::init()
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<std::int64_t>>());
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<float>>());
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<double>>());
-    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_O_Description<std::string>>());
 
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<std::int32_t>>());
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<std::int64_t>>());
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<float>>());
     addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<double>>());
-    addBenchmarkDescription(std::make_shared<SimpleSetIntersection_L_Description<std::string>>());
 }

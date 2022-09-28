@@ -7,6 +7,8 @@
 #include <cstring>
 #include <numeric>
 #include <utility>
+#include <algorithm>
+#include <iostream>
 
 #include "../bench_simplesetint.h"
 #include "benchmarks/Vector/include/vec_data_container.h"
@@ -30,6 +32,7 @@ inline SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection_Benchmark(heben
     case hebench::APIBridge::Workload::SimpleSetIntersection:
         m_set_size_x = w_params.n();
         m_set_size_y = w_params.m();
+        m_item_size_k = w_params.k();
         break;
     default:
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Unsupported benchmark descriptor 'bench_desc'"),
@@ -65,10 +68,10 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::encode(con
     //{
     internal_packed_params[0] =
         this->getEngine().template createRAII<VectorParamPack<T>>(p_parameters->p_data_packs[0],
-                                                                  m_set_size_x);
+                                                                  m_set_size_x * m_item_size_k);
     internal_packed_params[1] =
         this->getEngine().template createRAII<VectorParamPack<T>>(p_parameters->p_data_packs[1],
-                                                                  m_set_size_y);
+                                                                  m_set_size_y * m_item_size_k);
     //} // end for
 
     return this->getEngine().template createHandle<decltype(p_internal_packed_params)>(sizeof(VectorParamPack<T>) * internal_packed_params.size(), VectorParamPack<T>::tag,
@@ -198,7 +201,7 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(he
     for (std::size_t i = 0; i < params.size(); ++i)
         result_sample_count *= params[i]->getSamplesCount();
     // if X in Y or Y in X, there's one contained, so the maximun size is the minimum between the two sets.
-    std::vector<std::uint64_t> result_sample_sizes(result_sample_count, std::min(m_set_size_x, m_set_size_y));
+    std::vector<std::uint64_t> result_sample_sizes(result_sample_count, std::min(m_set_size_x, m_set_size_y) * m_item_size_k);
 
     // allocate buffers for results
     std::shared_ptr<VectorParamPack<T>> p_result = std::make_shared<VectorParamPack<T>>(result_sample_count,
@@ -223,7 +226,7 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(he
 
             gsl::span<T> result_data = p_result->getSample(next_result);
 
-            SimpleSetIntersection(result_data, data[0], data[1], m_set_size_x, m_set_size_y);
+            SimpleSetIntersection(result_data, data[0], data[1], m_set_size_x, m_set_size_y, m_item_size_k);
             ++next_result;
         } // end for
     } // end for
@@ -240,28 +243,91 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(he
 }
 
 template <class T>
-void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &result,
-                                                               const gsl::span<const T> &X, 
-                                                               const gsl::span<const T> &Y, 
-                                                               std::size_t n,
-                                                               std::size_t m)
+bool SimpleSetIntersection_Benchmark<T>::isMemberOf(const T *dataset, const T *value, std::size_t n, std::size_t k)
 {
-    if (X.size() != n)
+    bool retval = false;
+    for (size_t i = 0; !retval && i < n; ++i)
+    {
+        std::uint64_t members = 0;
+        bool flag = true;
+        for (size_t j = 0; flag && j < k; ++j)
+        {
+            flag = dataset[(i*k)+j] == value[j];
+            if (flag)
+            {
+                ++members;
+            }
+        }
+        retval = members == k;
+    }
+    return retval;
+}
+
+template <class T>
+void SimpleSetIntersection_Benchmark<T>::mySetIntersection(const T *dataset_X, const T *dataset_Y, gsl::span<T> &result,
+                                                           std::size_t n, std::size_t m, std::size_t k)
+{
+    size_t idx_result = 0;
+    for (size_t idx_x = 0; idx_x < n; ++idx_x)
+    {
+        if (isMemberOf(dataset_Y, dataset_X + idx_x, m, k))
+        {
+            std::copy(dataset_X + (idx_x * k), dataset_X + (idx_x * k) + k, result.begin() + (idx_result * k));
+            ++idx_result;
+        }
+    }
+}
+
+template <class T>
+void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &result,
+                                                               const gsl::span<const T> &X, const gsl::span<const T> &Y, 
+                                                               std::size_t n, std::size_t m, std::size_t k)
+{
+    if (k == 0)
+    {
+        throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vectors in parameter 0 & 1, since k is 0."),
+                                         HEBENCH_ECODE_INVALID_ARGS);
+    }
+    if (X.size() != n*k) 
+    {
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector in parameter 0."),
                                          HEBENCH_ECODE_INVALID_ARGS);
-    if (Y.size() != m)
+    }
+    if (Y.size() != m*k)
+    {
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector in parameter 1."),
                                          HEBENCH_ECODE_INVALID_ARGS);
-    if (result.size() != std::min(n, m))
+    }
+    if (result.size() != std::min(n, m) * k)
+    {
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector for result."),
                                          HEBENCH_ECODE_INVALID_ARGS);
+    }
 
-    std::vector<T> sorted_x {X.begin(), X.begin() + n};
-    std::vector<T> sorted_y {Y.begin(), Y.begin() + m};
+    const T *m_X = X.data();
+    const T *m_Y = Y.data();
 
-    std::sort(sorted_x.begin(), sorted_x.begin() + n);
-    std::sort(sorted_y.begin(), sorted_y.begin() + m);
-    std::set_intersection(sorted_x.begin(), sorted_x.begin() + n , sorted_y.begin(), sorted_y.begin() + m, result.begin());
+    if (n > m)
+    {
+        mySetIntersection(m_X, m_Y, result, n, m, k);
+    } 
+    else
+    {
+        mySetIntersection(m_Y, m_X, result, m, n, k);
+    }
+
+    /*for(size_t i = 0; i < X.size(); ++i)
+    {
+        std::cout << "x_i:" << i << " - >" << X[i] << std::endl;
+    }  
+    for(size_t i = 0; i < Y.size(); ++i)
+    {
+        std::cout << "y_i:" << i << " - >" << Y[i] << std::endl;
+    }  
+    for(size_t i = 0; i < result.size(); ++i)
+    {
+        std::cout << "z_i:" << i << " - >" << result[i] << std::endl;
+    }*/
 }
 
 #endif // defined _HEBench_Bench_SimpleSetIntersection_SRC_

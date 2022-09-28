@@ -50,13 +50,6 @@ inline SimpleSetIntersection_O_Description<std::int64_t>::SimpleSetIntersection_
     m_descriptor.data_type = hebench::APIBridge::DataType::Int64;
 }
 
-template <>
-inline SimpleSetIntersection_O_Description<std::string>::SimpleSetIntersection_O_Description()
-{
-    init();
-    m_descriptor.data_type = hebench::APIBridge::DataType::String;
-}
-
 template <class T>
 inline void SimpleSetIntersection_O_Description<T>::init()
 {
@@ -74,6 +67,7 @@ inline void SimpleSetIntersection_O_Description<T>::init()
     hebench::cpp::WorkloadParams::SimpleSetIntersection default_workload_params;
     default_workload_params.n() = 99;
     default_workload_params.m() = 13;
+    default_workload_params.k() = 1;
     this->addDefaultParameters(default_workload_params);
 }
 

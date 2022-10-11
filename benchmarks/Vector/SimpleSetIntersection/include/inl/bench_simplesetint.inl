@@ -1,14 +1,17 @@
+// Copyright (C) 2021 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef _HEBench_Bench_SimpleSetIntersection_SRC_
 #define _HEBench_Bench_SimpleSetIntersection_SRC_
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <cstring>
+#include <iostream>
 #include <numeric>
 #include <utility>
-#include <algorithm>
-#include <iostream>
 
 #include "../bench_simplesetint.h"
 #include "benchmarks/Vector/include/vec_data_container.h"
@@ -21,8 +24,8 @@
 
 template <class T>
 inline SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection_Benchmark(hebench::cpp::BaseEngine &engine,
-                                             const hebench::APIBridge::BenchmarkDescriptor &bench_desc,
-                                             const hebench::APIBridge::WorkloadParams &bench_params) :
+                                                                           const hebench::APIBridge::BenchmarkDescriptor &bench_desc,
+                                                                           const hebench::APIBridge::WorkloadParams &bench_params) :
     ClearTextBenchmark(engine, bench_desc)
 {
     hebench::cpp::WorkloadParams::SimpleSetIntersection w_params(bench_params);
@@ -30,8 +33,8 @@ inline SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection_Benchmark(heben
     switch (bench_desc.workload)
     {
     case hebench::APIBridge::Workload::SimpleSetIntersection:
-        m_set_size_x = w_params.n();
-        m_set_size_y = w_params.m();
+        m_set_size_x  = w_params.n();
+        m_set_size_y  = w_params.m();
         m_item_size_k = w_params.k();
         break;
     default:
@@ -80,7 +83,7 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::encode(con
 
 template <class T>
 inline void SimpleSetIntersection_Benchmark<T>::decode(hebench::APIBridge::Handle encoded_data,
-                                        hebench::APIBridge::DataPackCollection *p_native)
+                                                       hebench::APIBridge::DataPackCollection *p_native)
 {
     // PackedParams <=> std::vector<std::shared_ptr<MatrixParamPack>>
     // DataPack <=> MatrixParamPack
@@ -101,7 +104,7 @@ inline void SimpleSetIntersection_Benchmark<T>::decode(hebench::APIBridge::Handl
 
 template <class T>
 inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::load(const hebench::APIBridge::Handle *p_local_data,
-                                                            std::uint64_t count)
+                                                                           std::uint64_t count)
 {
     if (count != 1) // we only deal with plain text
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Invalid number of handles. Expected 1."),
@@ -142,7 +145,7 @@ inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::load(const
 
 template <class T>
 inline void SimpleSetIntersection_Benchmark<T>::store(hebench::APIBridge::Handle remote_data,
-                                       hebench::APIBridge::Handle *p_local_data, std::uint64_t count)
+                                                      hebench::APIBridge::Handle *p_local_data, std::uint64_t count)
 {
     // remote_data handle <=> vector<PackedParams>
     // PackedParams <=> std::vector<std::shared_ptr<MatrixParamPack>>
@@ -175,7 +178,7 @@ inline void SimpleSetIntersection_Benchmark<T>::store(hebench::APIBridge::Handle
 
 template <class T>
 inline hebench::APIBridge::Handle SimpleSetIntersection_Benchmark<T>::operate(hebench::APIBridge::Handle h_remote_packed,
-                                                               const hebench::APIBridge::ParameterIndexer *p_param_indexers)
+                                                                              const hebench::APIBridge::ParameterIndexer *p_param_indexers)
 {
     if (!p_param_indexers)
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Invalid null parameter 'p_param_indexers"),
@@ -249,10 +252,10 @@ bool SimpleSetIntersection_Benchmark<T>::isMemberOf(const T *dataset, const T *v
     for (size_t i = 0; !retval && i < n; ++i)
     {
         std::uint64_t members = 0;
-        bool flag = true;
+        bool flag             = true;
         for (size_t j = 0; flag && j < k; ++j)
         {
-            flag = dataset[(i*k)+j] == value[j];
+            flag = dataset[(i * k) + j] == value[j];
             if (flag)
             {
                 ++members;
@@ -272,15 +275,18 @@ void SimpleSetIntersection_Benchmark<T>::mySetIntersection(const T *dataset_X, c
     {
         if (isMemberOf(dataset_Y, dataset_X + (idx_x * k), m, k))
         {
-            std::copy(dataset_X + (idx_x * k), dataset_X + (idx_x * k) + k, result.begin() + (idx_result * k));
-            ++idx_result;
+            if (!isMemberOf(result.data(), dataset_X + (idx_x * k), m, k))
+            {
+                std::copy(dataset_X + (idx_x * k), dataset_X + (idx_x * k) + k, result.begin() + (idx_result * k));
+                ++idx_result;
+            } // end if
         }
     }
 }
 
 template <class T>
 void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &result,
-                                                               const gsl::span<const T> &X, const gsl::span<const T> &Y, 
+                                                               const gsl::span<const T> &X, const gsl::span<const T> &Y,
                                                                std::size_t n, std::size_t m, std::size_t k)
 {
     if (k == 0)
@@ -288,12 +294,12 @@ void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &res
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vectors in parameter 0 & 1, since k is 0."),
                                          HEBENCH_ECODE_INVALID_ARGS);
     }
-    if (X.size() != n*k) 
+    if (X.size() != n * k)
     {
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector in parameter 0."),
                                          HEBENCH_ECODE_INVALID_ARGS);
     }
-    if (Y.size() != m*k)
+    if (Y.size() != m * k)
     {
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Malformed vector in parameter 1."),
                                          HEBENCH_ECODE_INVALID_ARGS);
@@ -310,20 +316,20 @@ void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &res
     if (n > m)
     {
         mySetIntersection(m_X, m_Y, result, n, m, k);
-    } 
+    }
     else
     {
         mySetIntersection(m_Y, m_X, result, m, n, k);
     }
 
-/*     for(size_t i = 0; i < n*k; ++i)
+    /*     for(size_t i = 0; i < n*k; ++i)
     {
         std::cout << "x_i:" << i << " - >" << m_X[i] << std::endl;
-    }  
+    }
     for(size_t i = 0; i < m*k; ++i)
     {
         std::cout << "y_i:" << i << " - >" << m_Y[i] << std::endl;
-    }  
+    }
     for(size_t i = 0; i < result.size(); ++i)
     {
         std::cout << "z_i:" << i << " - >" << result[i] << std::endl;

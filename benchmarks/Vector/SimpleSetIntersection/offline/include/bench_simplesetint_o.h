@@ -1,3 +1,6 @@
+// Copyright (C) 2021 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef _HEBench_ClearText_SimpleSetIntersection_O_H_
 #define _HEBench_ClearText_SimpleSetIntersection_O_H_
 
@@ -56,8 +59,8 @@ inline void SimpleSetIntersection_O_Description<T>::init()
     std::memset(&m_descriptor, 0, sizeof(hebench::APIBridge::BenchmarkDescriptor));
     m_descriptor.workload                         = hebench::APIBridge::Workload::SimpleSetIntersection;
     m_descriptor.category                         = hebench::APIBridge::Category::Offline;
-    m_descriptor.cat_params.offline.data_count[0] = 1;
-    m_descriptor.cat_params.offline.data_count[1] = 1;
+    m_descriptor.cat_params.offline.data_count[0] = 0;
+    m_descriptor.cat_params.offline.data_count[1] = 0;
     m_descriptor.cipher_param_mask                = HEBENCH_HE_PARAM_FLAGS_ALL_PLAIN; // all plain text params for this example
     //
     m_descriptor.scheme   = HEBENCH_HE_SCHEME_PLAIN;

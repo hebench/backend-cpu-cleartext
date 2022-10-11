@@ -270,7 +270,7 @@ void SimpleSetIntersection_Benchmark<T>::mySetIntersection(const T *dataset_X, c
     size_t idx_result = 0;
     for (size_t idx_x = 0; idx_x < n; ++idx_x)
     {
-        if (isMemberOf(dataset_Y, dataset_X + idx_x, m, k))
+        if (isMemberOf(dataset_Y, dataset_X + (idx_x * k), m, k))
         {
             std::copy(dataset_X + (idx_x * k), dataset_X + (idx_x * k) + k, result.begin() + (idx_result * k));
             ++idx_result;
@@ -316,18 +316,18 @@ void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &res
         mySetIntersection(m_Y, m_X, result, m, n, k);
     }
 
-    /*for(size_t i = 0; i < X.size(); ++i)
+/*     for(size_t i = 0; i < n*k; ++i)
     {
-        std::cout << "x_i:" << i << " - >" << X[i] << std::endl;
+        std::cout << "x_i:" << i << " - >" << m_X[i] << std::endl;
     }  
-    for(size_t i = 0; i < Y.size(); ++i)
+    for(size_t i = 0; i < m*k; ++i)
     {
-        std::cout << "y_i:" << i << " - >" << Y[i] << std::endl;
+        std::cout << "y_i:" << i << " - >" << m_Y[i] << std::endl;
     }  
     for(size_t i = 0; i < result.size(); ++i)
     {
         std::cout << "z_i:" << i << " - >" << result[i] << std::endl;
-    }*/
+    } */
 }
 
 #endif // defined _HEBench_Bench_SimpleSetIntersection_SRC_

@@ -1,3 +1,6 @@
+// Copyright (C) 2021 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef _HEBench_ClearText_SimpleSetIntersection_H_
 #define _HEBench_ClearText_SimpleSetIntersection_H_
 
@@ -15,8 +18,8 @@ private:
 
 public:
     SimpleSetIntersection_Benchmark(hebench::cpp::BaseEngine &engine,
-                     const hebench::APIBridge::BenchmarkDescriptor &bench_desc,
-                     const hebench::APIBridge::WorkloadParams &bench_params);
+                                    const hebench::APIBridge::BenchmarkDescriptor &bench_desc,
+                                    const hebench::APIBridge::WorkloadParams &bench_params);
     ~SimpleSetIntersection_Benchmark() override;
 
     hebench::APIBridge::Handle encode(const hebench::APIBridge::DataPackCollection *p_parameters) override;

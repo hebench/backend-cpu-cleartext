@@ -1,3 +1,6 @@
+// Copyright (C) 2021 Intel Corporation
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef _HEBench_ClearText_SimpleSetIntersection_L_H_
 #define _HEBench_ClearText_SimpleSetIntersection_L_H_
 

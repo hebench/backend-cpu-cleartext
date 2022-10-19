@@ -284,8 +284,6 @@ void SimpleSetIntersection_Benchmark<T>::mySetIntersection(const T *dataset_X, c
     }
 }
 
-
-
 template <class T>
 void SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection(gsl::span<T> &result,
                                                                const gsl::span<const T> &X, const gsl::span<const T> &Y,

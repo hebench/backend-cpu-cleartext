@@ -109,6 +109,17 @@ list(APPEND be_cleartext_HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/Vector/LogisticRegression/include/inl/bench_logreg.inl"
     )
 
+## logisticregression
+list(APPEND be_cleartext_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/Vector/SimpleSetIntersection/include/bench_simplesetint.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/Vector/SimpleSetIntersection/latency/include/bench_simplesetint_l.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/Vector/SimpleSetIntersection/offline/include/bench_simplesetint_o.h"
+    )
+
+list(APPEND be_cleartext_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/Vector/SimpleSetIntersection/include/inl/bench_simplesetint.inl"
+    )
+
 ## main
 list(APPEND be_cleartext_HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/include/clear_error.h"

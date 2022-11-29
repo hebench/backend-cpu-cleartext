@@ -33,9 +33,11 @@ inline SimpleSetIntersection_Benchmark<T>::SimpleSetIntersection_Benchmark(heben
     switch (bench_desc.workload)
     {
     case hebench::APIBridge::Workload::SimpleSetIntersection:
-        m_set_size_x  = w_params.n();
-        m_set_size_y  = w_params.m();
-        m_item_size_k = w_params.k();
+        m_set_size_x   = w_params.n();
+        m_set_size_y   = w_params.m();
+        m_item_size_k  = w_params.k();
+        m_data_range_i = w_params.a();
+        m_data_range_j = w_params.b();
         break;
     default:
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Unsupported benchmark descriptor 'bench_desc'"),

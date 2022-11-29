@@ -72,6 +72,8 @@ inline void SimpleSetIntersection_L_Description<T>::init()
     default_workload_params.n() = 99;
     default_workload_params.m() = 13;
     default_workload_params.k() = 1;
+    default_workload_params.a() = -16384;
+    default_workload_params.b() = 16384;
     this->addDefaultParameters(default_workload_params);
 }
 

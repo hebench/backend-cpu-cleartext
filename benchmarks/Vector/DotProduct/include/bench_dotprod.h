@@ -18,6 +18,8 @@ private:
     HEBERROR_DECLARE_CLASS_NAME(DotProd_Benchmark)
 
 public:
+    static constexpr std::uint64_t NumOpParams = 2;
+
     DotProd_Benchmark(hebench::cpp::BaseEngine &engine,
                       const hebench::APIBridge::BenchmarkDescriptor &bench_desc,
                       const hebench::APIBridge::WorkloadParams &bench_params);
@@ -31,7 +33,8 @@ public:
                hebench::APIBridge::Handle *p_local_data, std::uint64_t count) override;
 
     hebench::APIBridge::Handle operate(hebench::APIBridge::Handle h_remote_packed,
-                                       const hebench::APIBridge::ParameterIndexer *p_param_indexers) override;
+                                       const hebench::APIBridge::ParameterIndexer *p_param_indexers,
+                                       std::uint64_t indexers_count) override;
 
 protected:
     std::uint64_t m_vector_size;

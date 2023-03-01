@@ -174,8 +174,10 @@ inline void MatMult_Benchmark<T>::store(hebench::APIBridge::Handle remote_data,
 
 template <class T>
 inline hebench::APIBridge::Handle MatMult_Benchmark<T>::operate(hebench::APIBridge::Handle h_remote_packed,
-                                                                const hebench::APIBridge::ParameterIndexer *p_param_indexers)
+                                                                const hebench::APIBridge::ParameterIndexer *p_param_indexers,
+                                                                std::uint64_t indexers_count)
 {
+    assert(indexers_count >= NumOpParams);
     if (!p_param_indexers)
         throw hebench::cpp::HEBenchError(HEBERROR_MSG_CLASS("Invalid null parameter 'p_param_indexers"),
                                          HEBENCH_ECODE_INVALID_ARGS);

@@ -39,6 +39,8 @@ protected:
     std::uint64_t m_set_size_x;
     std::uint64_t m_set_size_y;
     std::uint64_t m_item_size_k;
+    std::int64_t m_data_range_i;
+    std::int64_t m_data_range_j;
     hebench::APIBridge::Workload m_workload;
 
 private:
